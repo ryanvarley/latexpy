@@ -32,19 +32,26 @@ class LatexMultiFigure(LatexObject):
         self.figsPerRow = 2
         self.maxWidthUnit = '\\textwidth'
 
+        # internal variables for code only
         self._caption = False
         self._figColNum = 1
+
 
     def _getWidth(self):
         return '{}{}'.format(0.5, self.maxWidthUnit)  # TODO replace with calculation
 
     def addFigure(self, path):
         figColNum = self._figColNum
+
+        if len(self.texLines):  # if we have a previous figure
+            if figColNum > 1:  # not the first in the row
+                self.texLines[-1] += '&'  # add endchar to previous figure now we are adding another fig
+
         if figColNum < self.figsPerRow:
-            endChar = '&'  # TODO endchar should be appended to the previous value after the next value is processed
             self._figColNum += 1
+            endChar = ''
         elif figColNum == self.figsPerRow:
-            endChar = '\\\\'
+            endChar = '\\\\'  # add end row char is last in row
             self._figColNum = 1
         else:
             raise ValueError('somethings wrong with the figure count')
