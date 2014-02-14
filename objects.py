@@ -32,6 +32,7 @@ class LatexMultiFigure(LatexObject):
         self.figsPerRow = 2
         self.maxWidthUnit = '\\textwidth'
 
+        self._caption = False
         self._figColNum = 1
 
     def _getWidth(self):
@@ -51,10 +52,13 @@ class LatexMultiFigure(LatexObject):
         figureTex = '\includegraphics[width={}]{}'.format(self._getWidth(), '{' + path + '}')
         self.texLines.append(figureTex + endChar)
 
+    def addCaption(self, caption):
+        self._caption = '\caption{' + caption + '}'
 
     def _startObject(self):
-        startObject = []
-        startObject.append('\\begin{figure}[' + self.pos + ']')
+        startObject= ['\\begin{figure}[' + self.pos + ']']
+        if self._caption:
+            startObject.append(self._caption)
         if self.centering:
             startObject.append('\\centering')
         startObject.append('\\begin{tabular}{cc}')

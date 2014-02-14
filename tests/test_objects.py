@@ -20,10 +20,21 @@ class Test_MultiFigure(unittest.TestCase):
         self.basicFig.addFigure('path4.png')
 
     def test_MultiFigureParse2cols(self):
-
         answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
-
         self.assertEqual(answer, self.basicFig.output())
+
+    def test_MultiFigureParse2colsNoCenter(self):
+        self.answerStart.pop(1)  # remove center line
+        self.basicFig.centering = False
+        answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
+        self.assertEqual(answer, self.basicFig.output())
+
+    def test_MultiFigureParse2colsWithCaption(self):
+        self.answerStart.insert(1, '\\caption{test caption}')  # remove center line
+        self.basicFig.addCaption('test caption')
+        answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
+        self.assertEqual(answer, self.basicFig.output())
+
 
 if __name__ == '__main__':
     unittest.main()
