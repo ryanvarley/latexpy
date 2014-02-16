@@ -2,6 +2,8 @@ class LatexObject(object):
 
     def __init__(self):
         self.texLines = []  # the main list
+        self._caption = False
+        self._label = False
 
     def _startObject(self):
         return ['']
@@ -11,6 +13,12 @@ class LatexObject(object):
 
     def _proccessTex(self):
         return self.texLines
+
+    def addCaption(self, caption):
+        self._caption = '\\caption{' + caption + '}'
+
+    def addLabel(self, label):
+        self._label = '\\label{' + label + '}'
 
     def output(self):
         """ outputs tex as a string
@@ -33,7 +41,6 @@ class LatexMultiFigure(LatexObject):
         self.maxWidthUnit = '\\textwidth'
 
         # internal variables for code only
-        self._caption = False
         self._figColNum = 1
 
 
@@ -51,16 +58,13 @@ class LatexMultiFigure(LatexObject):
             self._figColNum += 1
             endChar = ''
         elif figColNum == self.figsPerRow:
-            endChar = '\\\\'  # add end row char is last in row
+            endChar = '\\\\'  # add end row char if last in row
             self._figColNum = 1
         else:
             raise ValueError('somethings wrong with the figure count')
 
         figureTex = '\includegraphics[width={}]{}'.format(self._getWidth(), '{' + path + '}')
         self.texLines.append(figureTex + endChar)
-
-    def addCaption(self, caption):
-        self._caption = '\caption{' + caption + '}'
 
     def _startObject(self):
         startObject= ['\\begin{figure}[' + self.pos + ']']
@@ -72,8 +76,10 @@ class LatexMultiFigure(LatexObject):
         return startObject
 
     def _endObject(self):
-        endObject = ['\\end{tabular}\n'
-                     '\\end{figure}']
+        endObject = ['\\end{tabular}']
+        if self._label:
+            endObject.append(self._label)
+        endObject.append('\\end{figure}')
         return endObject
 
 

@@ -35,6 +35,12 @@ class Test_MultiFigure(unittest.TestCase):
         answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
         self.assertEqual(answer, self.basicFig.output())
 
+    def test_MultiFigureParse2colsWithLabel(self):
+        self.answerEnd.insert(-1, '\\label{test label}')  # remove center line
+        self.basicFig.addLabel('test label')
+        answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
+        self.assertEqual(answer, self.basicFig.output())
+
     def test_MultiFigureParse2colsWithOddRow(self):
         self.answerContent.append('\\includegraphics[width=0.5\\textwidth]{path5.png}')
         self.basicFig.addFigure('path5.png')
