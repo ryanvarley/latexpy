@@ -97,6 +97,7 @@ class LatexTable(LatexObject):
         self.centering = True
 
         self._header = False
+        self._layout = False  # allows setting of manual layout
 
     def _startObject(self):
         startObject= ['\\begin{table}[' + self.pos + ']']
@@ -104,8 +105,10 @@ class LatexTable(LatexObject):
             startObject.append(self._caption)
         if self.centering:
             startObject.append('\\centering')
-
-        layout = 'l' * self.columns
+        if self._layout:
+            layout = self._layout
+        else:
+            layout = 'l' * self.columns
         startObject.append('\\begin{tabular}{' + layout + '}')
 
         if self._header:
