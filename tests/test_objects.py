@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 
 import latexpy.objects as tex
 
@@ -46,6 +47,27 @@ class Test_MultiFigure(unittest.TestCase):
         self.basicFig.addFigure('path5.png')
         answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
         self.assertEqual(answer, self.basicFig.output())
+
+
+class Test_LatexTable(unittest.TestCase):
+
+    def setUp(self):
+        self.answerStart = ['\\begin{table}[htbp]', '\\centering', '\\begin{tabular}{llll}']
+        self.answerContent = ['1 & 2 & 3 & 4 \\\\',
+                              '1.6 & 3.2 & 5.2 & 7.4 \\\\',
+                              'a & ~ & b & c \\\\',
+                              ]
+        self.answerEnd = ['\\end{tabular}', '\\end{table}']
+
+        self.basicTab = tex.LatexTable(columns=4)
+        self.basicTab.addRow([1, 2, 3, 4])
+        self.basicTab.addRow([1.6, 3.2, 5.2, 7.4])
+        self.basicTab.addRow(['a', np.nan, 'b', 'c'])
+
+    def test_MultiFigureParse4cols(self):
+        answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
+        self.assertEqual(answer, self.basicTab.output())
+
 
 
 if __name__ == '__main__':
