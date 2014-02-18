@@ -99,12 +99,19 @@ class LatexTable(LatexObject):
         self._header = False
         self._layout = False  # allows setting of manual layout
 
+        # Hooks
+        self.hook_BeforeTableStart = False
+
     def _startObject(self):
         startObject= ['\\begin{table}[' + self.pos + ']']
         if self._caption:
             startObject.append(self._caption)
         if self.centering:
             startObject.append('\\centering')
+
+        if self.hook_BeforeTableStart:  # Hook
+            startObject.append(self.hook_BeforeTableStart)
+
         if self._layout:
             layout = self._layout
         else:
@@ -119,7 +126,8 @@ class LatexTable(LatexObject):
     def addRow(self, rowList):
 
         if len(rowList) != self.columns:
-            raise ValueError('You must give the exact number of columns each time. use np.nan for blanks')
+            raise ValueError('You must give the exact number of columns each time (set {} got {}).'
+                             ' use np.nan for blanks'.format(self.columns, len(rowList)))
 
         parsedRowList = ['~' if val is np.nan else str(val) for val in rowList]
         self.texLines.append(' & '.join(parsedRowList) + ' \\\\')  # seperate values by & next cell char and lines by new line\\
