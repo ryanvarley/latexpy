@@ -101,7 +101,7 @@ class Table(LatexObject):
         self._layout = False  # allows setting of manual layout
 
         # Hooks
-        self.hook_BeforeTableStart = False
+        self.hook_BeforeTableStart = []
 
     def _startObject(self):
         startObject= ['\\begin{table}[' + self.pos + ']']
@@ -111,7 +111,7 @@ class Table(LatexObject):
             startObject.append('\\centering')
 
         if self.hook_BeforeTableStart:  # Hook
-            startObject.append(self.hook_BeforeTableStart)
+            startObject += self.hook_BeforeTableStart
 
         if self._layout:
             layout = self._layout
@@ -150,3 +150,74 @@ class Table(LatexObject):
 
         self.addRow(headerList)
         self._header = self.texLines.pop()
+
+
+class LongTable(Table):
+    """ Handles a long table instance, in this class header is the all pages header
+    """
+
+    def __init__(self, columns):
+        Table.__init__(self, columns)
+
+        self._pageHeaderLabel = False
+        self._firstPageHeader = False
+        self._footer = False
+        self._lastPageFooter = False
+
+    def addFirstPageHeader(self, headerList):
+        """ Currently this is your caption + table headings
+        """
+        raise NotImplementedError
+
+    def addPageHeaderLabel(self, headerLabel="\\tablename\ \\thetable\ -- \\textit{Continued from previous page}"):
+        """ i.e. continued from last page
+        """
+        self._pageHeaderLabel = headerLabel
+
+    def addLastPageFooter(self, footertext):
+        self._lastPageFooter = footertext
+
+    def addFooter(self, footertext="\\textit{Continued on next page}"):
+        """ normally a label i.e. (continued on next page)
+        """
+        self._footer = footertext
+
+    def _startObject(self):
+        if self._layout:
+            layout = self._layout
+        else:
+            layout = 'l' * self.columns
+
+        startObject = ['\\begin{longtable}[' + self.pos + ']{' + layout + '}']
+
+        # First Page Header
+        if self._caption:
+            startObject += [self._caption + '\\\\', '\\hline']  # caption has no linebreak by efault unlike addrow
+            if self._header:
+                startObject += [self._header, '\\hline']
+
+            startObject.append("\endfirsthead")
+
+        # Every other page Header
+        if self._header:
+            if self._pageHeaderLabel:
+                startObject.append(self._pageHeaderLabel + '\\\\')
+            startObject += ['\\hline', self._header, '\\hline', '\endhead']
+
+        if self._footer:
+            startObject += [self._footer + '\\\\', '\endfoot']
+
+        if self._lastPageFooter:
+            startObject += ['\\hline', self._lastPageFooter + '\\\\', '\endlastfoot']
+
+        if self.hook_BeforeTableStart:  # Hook
+            startObject += self.hook_BeforeTableStart
+
+        return startObject
+
+    def _endObject(self):
+        endObject = []
+        if self._label:
+            endObject.append(self._label)
+        endObject.append('\\end{longtable}')
+        return endObject

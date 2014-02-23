@@ -49,7 +49,7 @@ class Test_MultiFigure(unittest.TestCase):
         self.assertEqual(answer, self.basicFig.output())
 
 
-class Test_LatexTable(unittest.TestCase):
+class Test_Table(unittest.TestCase):
 
     def setUp(self):
         self.answerStart = ['\\begin{table}[htbp]', '\\centering', '\\begin{tabular}{llll}']
@@ -76,6 +76,50 @@ class Test_LatexTable(unittest.TestCase):
         self.assertEqual(answer, self.basicTab.output())
 
 
+class Test_LongTable(Test_Table):
+    """ support for a long table object. Note that at present this isn't super customisable
+    """
+
+    def setUp(self):
+        self.answerStart = ['\\begin{longtable}[htbp]{llll}',]
+        self.answerContent = ['1 & 2 & 3 & 4 \\\\',
+                              '1.6 & 3.2 & 5.2 & 7.4 \\\\',
+                              'a & ~ & b & c \\\\',
+                              ]
+        self.answerEnd = ['\\end{longtable}']
+
+        self.basicTab = tex.LongTable(columns=4)
+        self.basicTab.addRow([1, 2, 3, 4])
+        self.basicTab.addRow([1.6, 3.2, 5.2, 7.4])
+        self.basicTab.addRow(['a', np.nan, 'b', 'c'])
+
+    # def test_MultiFigureParse4cols(self):
+    #     answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
+    #     self.assertEqual(answer, self.basicTab.output())
+
+    def test_MultiFigureParse4cols_with_header(self):
+        self.basicTab.addHeader(['a', 'b', 'c', 'd'])
+        self.answerStart.append('\\hline\na & b & c & d \\\\\n\\hline\n\\endhead')
+        answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
+        self.assertEqual(answer, self.basicTab.output())
+
+    def test_MultiFigureParse4cols_with_firstpage_header(self):
+        self.basicTab.addCaption('first page header / caption')
+        self.answerStart.append('\\caption{first page header / caption}\\\\\n\\hline\n\\endfirsthead')
+        answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
+        self.assertEqual(answer, self.basicTab.output())
+
+    def test_MultiFigureParse4cols_with_footer(self):
+        self.basicTab.addFooter('cont on next page')
+        self.answerStart.append('cont on next page\\\\\n\\endfoot')
+        answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
+        self.assertEqual(answer, self.basicTab.output())
+
+    def test_MultiFigureParse4cols_with_lastfooter(self):
+        self.basicTab.addLastPageFooter('thats the end of the table')
+        self.answerStart.append('\\hline\nthats the end of the table\\\\\n\\endlastfoot')
+        answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
+        self.assertEqual(answer, self.basicTab.output())
 
 if __name__ == '__main__':
     unittest.main()
