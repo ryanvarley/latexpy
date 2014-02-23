@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class LatexObject(object):
 
     def __init__(self):
@@ -30,7 +31,7 @@ class LatexObject(object):
         return texFile
 
 
-class LatexMultiFigure(LatexObject):
+class MultiFigure(LatexObject):
     """ Handles a multiple plots in a figure instance
     """
 
@@ -85,7 +86,7 @@ class LatexMultiFigure(LatexObject):
         return endObject
 
 
-class LatexTable(LatexObject):
+class Table(LatexObject):
     """ Handles a table instance
     """
 

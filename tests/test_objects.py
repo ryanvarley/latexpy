@@ -14,7 +14,7 @@ class Test_MultiFigure(unittest.TestCase):
                       '\\includegraphics[width=0.5\\textwidth]{path4.png}\\\\']
         self.answerEnd = ['\\end{tabular}', '\\end{figure}']
 
-        self.basicFig = tex.LatexMultiFigure()
+        self.basicFig = tex.MultiFigure()
         self.basicFig.addFigure('path1.png')
         self.basicFig.addFigure('path2.png')
         self.basicFig.addFigure('path3.png')
@@ -59,7 +59,7 @@ class Test_LatexTable(unittest.TestCase):
                               ]
         self.answerEnd = ['\\end{tabular}', '\\end{table}']
 
-        self.basicTab = tex.LatexTable(columns=4)
+        self.basicTab = tex.Table(columns=4)
         self.basicTab.addRow([1, 2, 3, 4])
         self.basicTab.addRow([1.6, 3.2, 5.2, 7.4])
         self.basicTab.addRow(['a', np.nan, 'b', 'c'])
