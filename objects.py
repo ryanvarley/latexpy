@@ -121,6 +121,7 @@ class LatexTable(LatexObject):
         if self._header:
             startObject.append(self._header)
             startObject.append('\hline')
+
         return startObject
 
     def addRow(self, rowList):

@@ -68,6 +68,13 @@ class Test_LatexTable(unittest.TestCase):
         answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
         self.assertEqual(answer, self.basicTab.output())
 
+    def test_MultiFigureParse4cols_with_header(self):
+        self.basicTab.addHeader(['a', 'b', 'c', 'd'])
+
+        self.answerStart.append('a & b & c & d \\\\\n\\hline')
+        answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
+        self.assertEqual(answer, self.basicTab.output())
+
 
 
 if __name__ == '__main__':
