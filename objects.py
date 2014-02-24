@@ -42,13 +42,13 @@ class MultiFigure(LatexObject):
         self.centering = True
         self.figsPerRow = 2
         self.maxWidthUnit = '\\textwidth'
+        self.maxWidth = 0.5 # TODO replace with calculation
 
         # internal variables for code only
         self._figColNum = 1
 
-
     def _getWidth(self):
-        return '{}{}'.format(0.5, self.maxWidthUnit)  # TODO replace with calculation
+        return '{}{}'.format(self.maxWidth, self.maxWidthUnit)
 
     def addFigure(self, path):
         figColNum = self._figColNum
