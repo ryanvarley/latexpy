@@ -1,7 +1,11 @@
 import unittest
 import numpy as np
+import sys
 
-import latexpy.objects as tex
+from os.path import join
+sys.path.append(join('..'))
+
+import objects as tex
 
 
 class Test_MultiFigure(unittest.TestCase):
