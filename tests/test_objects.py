@@ -103,6 +103,12 @@ class Test_LongTable(Test_Table):
         answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
         self.assertEqual(answer, self.basicTab.output())
 
+    def test_MultiFigureParse4cols_with_header_label(self):
+        self.basicTab.addPageHeaderLabel('Continued from previous page')
+        self.answerStart.append('\\multicolumn{4}{l}{Continued from previous page}\\\\\n\\hline\n\\endhead')
+        answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
+        self.assertEqual(answer, self.basicTab.output())
+
     def test_MultiFigureParse4cols_with_firstpage_header(self):
         self.basicTab.addCaption('first page header / caption')
         self.answerStart.append('\\caption{first page header / caption}\\\\\n\\hline\n\\endfirsthead')
@@ -111,7 +117,7 @@ class Test_LongTable(Test_Table):
 
     def test_MultiFigureParse4cols_with_footer(self):
         self.basicTab.addFooter('cont on next page')
-        self.answerStart.append('cont on next page\\\\\n\\endfoot')
+        self.answerStart.append('\\multicolumn{4}{l}{cont on next page}\\\\\n\\endfoot')
         answer = '\n'.join(self.answerStart + self.answerContent + self.answerEnd)
         self.assertEqual(answer, self.basicTab.output())
 

@@ -203,6 +203,8 @@ class LongTable(Table):
             if self._pageHeaderLabel:
                 startObject.append(self._pageHeaderLabel + '\\\\')
             startObject += ['\\hline', self._header, '\\hline', '\endhead']
+        elif self._pageHeaderLabel:
+            startObject += [self._pageHeaderLabel + '\\\\', '\\hline', '\endhead']
 
         if self._footer:
             startObject += [self._footer + '\\\\', '\endfoot']
