@@ -172,7 +172,7 @@ class LongTable(Table):
     def addPageHeaderLabel(self, headerLabel="\\tablename\ \\thetable\ -- \\textit{Continued from previous page}"):
         """ i.e. continued from last page
         """
-        self._pageHeaderLabel = headerLabel
+        self._pageHeaderLabel = '\multicolumn{{{}}}{{l}}{{{}}}'.format(self.columns, headerLabel)
 
     def addLastPageFooter(self, footertext):
         self._lastPageFooter = footertext
@@ -180,7 +180,7 @@ class LongTable(Table):
     def addFooter(self, footertext="\\textit{Continued on next page}"):
         """ normally a label i.e. (continued on next page)
         """
-        self._footer = footertext
+        self._footer = '\multicolumn{{{}}}{{l}}{{{}}}'.format(self.columns, footertext)
 
     def _startObject(self):
         if self._layout:
