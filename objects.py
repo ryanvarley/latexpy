@@ -35,14 +35,14 @@ class MultiFigure(LatexObject):
     """ Handles a multiple plots in a figure instance
     """
 
-    def __init__(self, pos='htbp'):
+    def __init__(self, pos='htbp', figsPerRow=2):
         LatexObject.__init__(self)
 
         self.pos = pos  # position argument
         self.centering = True
-        self.figsPerRow = 2
+        self.figsPerRow = figsPerRow
         self.maxWidthUnit = '\\textwidth'
-        self.maxWidth = 0.5 # TODO replace with calculation
+        self.maxWidth = 1.0/figsPerRow
 
         # internal variables for code only
         self._figColNum = 1
@@ -75,7 +75,7 @@ class MultiFigure(LatexObject):
             startObject.append(self._caption)
         if self.centering:
             startObject.append('\\centering')
-        startObject.append('\\begin{tabular}{cc}')
+        startObject.append('\\begin{{tabular}}{{{}}}'.format('c' * self.figsPerRow))
         return startObject
 
     def _endObject(self):
@@ -102,6 +102,7 @@ class Table(LatexObject):
 
         # Hooks
         self.hook_BeforeTableStart = []
+        self._blankchar = '~'
 
     def _startObject(self):
         startObject= ['\\begin{table}[' + self.pos + ']']
@@ -131,7 +132,7 @@ class Table(LatexObject):
             raise ValueError('You must give the exact number of columns each time (set {} got {}).'
                              ' use np.nan for blanks'.format(self.columns, len(rowList)))
 
-        parsedRowList = ['~' if val is np.nan else str(val) for val in rowList]
+        parsedRowList = [self._blankchar if str(val) == 'nan' else str(val) for val in rowList]  # math.nan will fail is non float, np.nan only catches numpy nans
         self.texLines.append(' & '.join(parsedRowList) + ' \\\\')  # seperate values by & next cell char and lines by new line\\
 
     def _endObject(self):
